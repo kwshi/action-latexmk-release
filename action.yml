@@ -1,0 +1,36 @@
+name: "latexmk-release"
+author: "kwshi"
+description: "Builds & releases LaTeX PDFs using latexmk"
+inputs:
+  tag:
+    description: "Release name"
+    required: true
+    default: "latexmk-latest"
+  token:
+    description: "GitHub repository authentication token"
+    required: true
+  paths:
+    description: "Newline-separated list of glob-paths to LaTeX source files"
+    required: true
+  engine:
+    description: "LaTeX engine backend to use (one of `lualatex`, `xelatex`, `pdflatex`)"
+    required: false
+    default: "lualatex"
+  out:
+    description: "LaTeX build output directory"
+    required: false
+    default: "_build"
+  args:
+    description: "Additional arguments to pass to `latexmk` call"
+    required: false
+    default: ""
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - "${{ inputs.token }}"
+    - "${{ inputs.tag }}"
+    - "${{ inputs.paths }}"
+    - "${{ inputs.engine }}"
+    - "${{ inputs.out }}"
+    - "${{ inputs.args }}"
