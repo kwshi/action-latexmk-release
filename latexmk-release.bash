@@ -83,7 +83,7 @@ function percent-encode {
   for path in "${paths[@]}"; do
     echo "::group::Compiling ${path@Q}"
     pushd "$(dirname -- "$path")"
-    latexmk "${args[@]}" "$path"
+    latexmk "${args[@]}" "$(bashename -- "$path")"
     popd
     echo '::endgroup::'
   done
