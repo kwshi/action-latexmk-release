@@ -41,11 +41,10 @@ function percent-encode {
   args+=('-interaction=nonstopmode' '-halt-on-error')
 
   # engine
-  if [[ "$ENGINE" != 'lualatex'|'pdflatex'|'xelatex' ]]; then
-    echo "::error::Unrecognized LaTeX engine ${ENGINE@Q}"
-    exit 1
-  fi
-  args+=("-$ENGINE")
+  case "$ENGINE" in
+    'lualatex'|'pdflatex'|'xelatex') args+=("-$ENGINE");;
+    *) echo "::error::Unrecognized LaTeX engine ${ENGINE@Q}"; exit 1;;
+  esac
 
   # output directory
   args+=("-output-directory=$OUT")
