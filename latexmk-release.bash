@@ -83,7 +83,7 @@ function percent-encode {
 {
   for path in "${paths[@]}"; do
     echo "::group::Compiling ${path@Q}"
-    pushd "$(dirname "$path")"
+    pushd "$(dirname -- "$path")"
     latexmk "${args[@]}" "$path"
     popd
     echo '::endgroup::'
@@ -108,8 +108,9 @@ function percent-encode {
 {
   echo '::group::Uploading release assets'
   for path in "${paths[@]}"; do
-    pdf="${path%.*}.pdf"
-    name="${pdf##*/}"
+    pushd "$(dirname -- "$path")/$OUT"
+    name="$(basename -s '.latex' -- "$(basename -s '.tex' -- "$path")")"
+    pdf="$name.pdf"
 
     url="$(
       "${CURL_API[@]}" -S \
@@ -121,6 +122,7 @@ function percent-encode {
           percent-encode "$pdf"
         )" | jq -rc '.browser_download_url'
     )"
+    popd
 
     echo "${pdf@Q}: $url"
   done
