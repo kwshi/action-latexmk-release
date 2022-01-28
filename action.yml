@@ -15,11 +15,11 @@ inputs:
   engine:
     description: "LaTeX engine backend to use (one of `lualatex`, `xelatex`, `pdflatex`)"
     required: false
-    default: "lualatex"
+    default: "pdflatex"
   out:
     description: "LaTeX build output directory"
     required: false
-    default: "_build"
+    default: "."
   args:
     description: "Additional arguments to pass to `latexmk` call"
     required: false
