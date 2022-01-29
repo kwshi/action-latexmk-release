@@ -24,6 +24,10 @@ inputs:
     description: "Additional TEXINPUTS search paths (newline-separated path list)"
     required: false
     default: ""
+  shell:
+    description: "Whether to enable shell-escape during compilation"
+    required: false
+    default: false
   args:
     description: "Additional arguments to pass to `latexmk` call"
     required: false
@@ -38,4 +42,5 @@ runs:
     - "${{ inputs.engine }}"
     - "${{ inputs.out }}"
     - "${{ inputs.texinputs }}"
+    - "${{ inputs.shell }}"
     - "${{ inputs.args }}"

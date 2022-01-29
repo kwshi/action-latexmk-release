@@ -9,7 +9,8 @@ declare \
   ENGINE="$4" \
   OUT="$5" \
   ARG_TEXINPUTS="$6" \
-  ARGS="$7" \
+  ARG_SHELL="$7" \
+  ARGS="$8" \
   UPLOAD_URL="https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases" \
   API_URL="https://api.github.com/repos/$GITHUB_REPOSITORY/releases"
 
@@ -50,6 +51,9 @@ function percent-encode {
 
   # output directory
   args+=("-output-directory=$OUT")
+
+  # shell escape
+  if [[ "$ARG_SHELL" == 'true' ]]; then args+=('-shell-escape'); fi
 
   # extra args: temporarily disable globbing, keep splitting
   # shellcheck disable=SC2206
