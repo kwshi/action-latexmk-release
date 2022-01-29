@@ -19,7 +19,8 @@ declare -a CURL_API=(
   -H 'Accept: application/vnd.github.v3+json'
 )
 
-declare -a patterns paths=() args=() texinput_patterns texinput_paths=()
+declare -a patterns paths=() args=()
+declare -a texinput_patterns texinput_paths=() texinput_abspaths=()
 declare path pdf id data url texinputs
 
 function percent-encode {
@@ -64,6 +65,7 @@ function percent-encode {
 # processing texinput paths
 {
   echo '::group::Preparing TEXINPUTS search path'
+  declare abs
   readarray -t texinput_patterns <<< "$ARG_TEXINPUTS"
   for pattern in "${texinput_patterns[@]}"; do
     # shellcheck disable=SC2206
@@ -72,10 +74,12 @@ function percent-encode {
 
   echo 'found paths:'
   for path in "${texinput_paths[@]}"; do
-    echo "  ${path@Q}"
+    abs="$(realpath -- "$path")"
+    texinput_abspaths+=("$abs")
+    echo "  ${path@Q} (absolute ${abs@Q})"
   done
 
-  IFS=':' texinputs="${texinput_paths[*]}:"
+  IFS=':' texinputs="${texinput_abspaths[*]}:"
   echo "collated search path: ${texinputs@Q}"
 
   echo '::endgroup::'
