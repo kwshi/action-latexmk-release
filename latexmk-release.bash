@@ -138,14 +138,13 @@ function percent-encode {
   for path in "${paths[@]}"; do
     pushd "$(dirname -- "$path")/$OUT"
     name="$(basename -s '.latex' -- "$(basename -s '.tex' -- "$path")")"
-    pdf="$name.pdf"
 
     url="$(
       "${CURL_API[@]}" -S \
         -H 'Content-Type: application/pdf' \
         --data-binary "@$pdf" \
         "$UPLOAD_URL/$id/assets?name=$(
-          percent-encode "$name"
+          percent-encode "$pdf"
         )&label=$(
           percent-encode "$pdf"
         )" | jq -rc '.browser_download_url'
