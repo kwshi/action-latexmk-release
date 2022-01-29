@@ -8,7 +8,8 @@ declare \
   PATTERNS="$3" \
   ENGINE="$4" \
   OUT="$5" \
-  ARGS="$6" \
+  ARG_TEXINPUTS="$6" \
+  ARGS="$7" \
   UPLOAD_URL="https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases" \
   API_URL="https://api.github.com/repos/$GITHUB_REPOSITORY/releases"
 
@@ -18,8 +19,8 @@ declare -a CURL_API=(
   -H 'Accept: application/vnd.github.v3+json'
 )
 
-declare -a patterns paths=() args=()
-declare path pdf id data url
+declare -a patterns paths=() args=() texinput_patterns texinput_paths=()
+declare path pdf id data url texinputs
 
 function percent-encode {
   local encoded='' c
@@ -60,6 +61,26 @@ function percent-encode {
   echo '::endgroup::'
 }
 
+# processing texinput paths
+{
+  echo '::group::Preparing TEXINPUTS search path'
+  readarray -t texinput_patterns <<< "$ARG_TEXINPUTS"
+  for pattern in "${texinput_patterns[@]}"; do
+    # shellcheck disable=SC2206
+    IFS= texinput_paths+=($pattern)
+  done
+
+  echo 'found paths:'
+  for path in "${texinput_paths[@]}"; do
+    echo "  ${path@Q}"
+  done
+
+  IFS=':' texinputs="${texinput_paths[*]}:"
+  echo "collated search path: ${texinputs@Q}"
+
+  echo '::endgroup::'
+}
+
 # glob source files
 {
   echo '::group::Finding source files'
@@ -83,7 +104,7 @@ function percent-encode {
   for path in "${paths[@]}"; do
     echo "::group::Compiling ${path@Q}"
     pushd "$(dirname -- "$path")"
-    latexmk "${args[@]}" "$(basename -- "$path")"
+    TEXINPUTS="$texinputs" latexmk "${args[@]}" "$(basename -- "$path")"
     popd
     echo '::endgroup::'
   done

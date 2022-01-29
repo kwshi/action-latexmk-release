@@ -20,6 +20,10 @@ inputs:
     description: "LaTeX build output directory"
     required: false
     default: "."
+  texinputs:
+    description: "Additional TEXINPUTS search paths (newline-separated path list)"
+    required: false
+    default: ""
   args:
     description: "Additional arguments to pass to `latexmk` call"
     required: false
@@ -33,4 +37,5 @@ runs:
     - "${{ inputs.paths }}"
     - "${{ inputs.engine }}"
     - "${{ inputs.out }}"
+    - "${{ inputs.texinputs }}"
     - "${{ inputs.args }}"
