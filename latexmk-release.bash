@@ -137,7 +137,7 @@ function percent-encode {
   echo '::group::Uploading release assets'
   for path in "${paths[@]}"; do
     pushd "$(dirname -- "$path")/$OUT"
-    name="$(basename -s '.latex' -- "$(basename -s '.tex' -- "$path")")"
+    pdf="$(basename -s '.latex' -- "$(basename -s '.tex' -- "$path")").pdf"
 
     url="$(
       "${CURL_API[@]}" -S \
