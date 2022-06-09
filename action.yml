@@ -9,6 +9,7 @@ inputs:
   token:
     description: "GitHub repository authentication token"
     required: true
+    default: "${{ github.token }}"
   paths:
     description: "Newline-separated list of glob-paths to LaTeX source files"
     required: true
