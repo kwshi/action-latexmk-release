@@ -144,9 +144,9 @@ function percent-encode {
         -H 'Content-Type: application/pdf' \
         --data-binary "@$pdf" \
         "$UPLOAD_URL/$id/assets?name=$(
-          percent-encode "$pdf"
+          percent-encode "$path"
         )&label=$(
-          percent-encode "$pdf"
+          percent-encode "$path"
         )" | jq -rc '.browser_download_url'
     )"
     popd
